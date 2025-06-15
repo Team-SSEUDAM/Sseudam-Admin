@@ -18,7 +18,15 @@ export interface ApiErrorResponse extends ApiResponse<ErrorResponse> {}
 export const BASE_URL = process.env.NEXT_PUBLIC_SERVER_API;
 const BASE_TIMEOUT = 10000;
 
-const getTokens = async () => ({ accessToken: '', refreshToken: '' });
+let cachedTokens: { accessToken?: string; refreshToken?: string } = {};
+
+const getTokens = async () => {
+  if (cachedTokens.accessToken) return cachedTokens;
+  // fetch from storage, then:
+  // const { accessToken, refreshToken } = readFromLocalStorage();
+  // cachedTokens = { accessToken, refreshToken };
+  return cachedTokens;
+};
 
 const setInterceptors = (instance: AxiosInstance) => {
   instance.interceptors.request.use(
@@ -33,6 +41,10 @@ const setInterceptors = (instance: AxiosInstance) => {
         config.headers['Refresh-Token'] = `Bearer ${refreshToken}`;
       }
       return config;
+    },
+    (error) => Promise.reject(error)
+  );
+};
     },
     (error) => Promise.reject(error),
   );
