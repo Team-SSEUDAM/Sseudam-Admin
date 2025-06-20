@@ -4,16 +4,14 @@ import { join } from "path";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  server: {
-    https: {
-      key: readFileSync(
-        join(process.cwd(), process.env.NEXT_PUBLIC_HTTPS_PEM_KEY || "")
-      ),
-      cert: readFileSync(
-        join(process.cwd(), process.env.NEXT_PUBLIC_HTTPS_PEM || "")
-      ),
+  ...(process.env.NODE_ENV === "development" && {
+    server: {
+      https: {
+        key: readFileSync(join(process.cwd(), "localhost-key.pem")),
+        cert: readFileSync(join(process.cwd(), "localhost.pem")),
+      },
     },
-  },
+  }),
 };
 
 export default nextConfig;
