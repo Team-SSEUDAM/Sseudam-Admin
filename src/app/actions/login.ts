@@ -47,9 +47,8 @@ export async function loginAction(
 
     const { success, data } = await response.json();
 
-    if (success || data) {
+    if (success && data) {
       console.log("로그인 성공");
-      console.log(data.refreshToken);
 
       const cookieStore = await cookies();
       cookieStore.set("refreshToken", data.refreshToken, {
@@ -66,7 +65,7 @@ export async function loginAction(
       };
     } else {
       return {
-        error: data.message || "로그인에 실패했습니다.",
+        error: data?.message || "로그인에 실패했습니다.",
       };
     }
   } catch (error) {
