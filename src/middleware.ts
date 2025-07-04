@@ -6,7 +6,42 @@ const protectedRoutes = ["/dashboard"];
 // NOTE: 공개 URL
 const publicRoutes = ["/"];
 
-export function middleware(request: NextRequest) {
+// NOTE: 토큰 갱신 함수
+async function refreshToken(
+  refreshToken: string
+): Promise<{ success: boolean; newRefreshToken?: string }> {
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+    const response = await fetch(`${apiUrl}/v1/admin/reissue`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ refreshToken }),
+    });
+
+    if (!response.ok) {
+      return { success: false };
+    }
+
+    const { data } = await response.json();
+
+    if (data.accessToken && data.refreshToken) {
+      return {
+        success: true,
+        newRefreshToken: data.refreshToken,
+      };
+    }
+
+    return { success: false };
+  } catch (error) {
+    console.error("토큰 갱신 실패:", error);
+    return { success: false };
+  }
+}
+
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   console.log(`[Middleware] 접근 경로: ${pathname}`);
@@ -17,21 +52,42 @@ export function middleware(request: NextRequest) {
 
   const isPublicRoute = publicRoutes.some((route) => pathname === route);
 
-  const refreshToken = request.cookies.get("refreshToken");
-  const isAuthenticated = !!refreshToken?.value; // TODO: 유효한 토큰인지 확인 필요
+  const refreshTokenCookie = request.cookies.get("refreshToken");
+  let isAuthenticated = !!refreshTokenCookie?.value;
 
-  // NOTE: 인증되지 않은 사용자가 접근하려는 경우
-  if (isProtectedRoute) {
-    if (!isAuthenticated) {
-      console.log(
-        `[Middleware] 인증되지 않은 사용자가 보호된 라우트 접근: ${pathname} → /로 리다이렉트`
-      );
-      const loginUrl = new URL("/", request.url);
-      return NextResponse.redirect(loginUrl);
+  // NOTE: 보호된 라우트 접근 시 토큰 유효성 검증 및 갱신 시도
+  if (isProtectedRoute && refreshTokenCookie?.value) {
+    const refreshResult = await refreshToken(refreshTokenCookie.value);
+
+    if (refreshResult.success) {
+      isAuthenticated = true;
+
+      // NOTE: 새로운 refreshToken이 있다면 쿠키 업데이트
+      if (refreshResult.newRefreshToken) {
+        const response = NextResponse.next();
+        response.cookies.set("refreshToken", refreshResult.newRefreshToken, {
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+          maxAge: 28 * 24 * 60 * 60,
+          path: "/",
+        });
+        return response;
+      }
+    } else {
+      isAuthenticated = false;
     }
   }
 
-  // NOTE: 이미 인증된 사용자가 로그인 페이지에 접근하는 경우
+  // NOTE: 인증되지 않은 사용자가 보호된 라우트 접근 시
+  if (isProtectedRoute && !isAuthenticated) {
+    console.log(
+      `[Middleware] 인증되지 않은 사용자가 보호된 라우트 접근: ${pathname} → /로 리다이렉트`
+    );
+    const loginUrl = new URL("/", request.url);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  // NOTE: 이미 인증된 사용자가 로그인 페이지 접근 시
   if (isPublicRoute && isAuthenticated && pathname === "/") {
     console.log(
       `[Middleware] 인증된 사용자가 로그인 페이지 접근: ${pathname} → /dashboard로 리다이렉트`

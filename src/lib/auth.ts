@@ -36,7 +36,6 @@ const getRefreshTokenFromCookie = (): string | null => {
   if (typeof document === "undefined") return null;
 
   const cookies = document.cookie.split(";");
-  console.log(cookies);
   const refreshTokenCookie = cookies.find((cookie) =>
     cookie.trim().startsWith("refreshToken=")
   );
@@ -75,7 +74,6 @@ export const refreshAccessToken = async (): Promise<string | null> => {
     }
 
     const { data } = await response.json();
-    console.log(data);
 
     if (data.accessToken) {
       setAccessToken(data.accessToken);
@@ -110,7 +108,6 @@ export const initializeAuth = async (): Promise<boolean> => {
     }
 
     const refreshToken = getRefreshTokenFromCookie();
-    console.log(refreshToken);
     if (!refreshToken) {
       console.log("Refresh Token이 없습니다. 로그인이 필요합니다.");
       return false;
