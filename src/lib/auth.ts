@@ -9,7 +9,27 @@ export const setAccessToken = (token: string) => {
 };
 
 export const removeAccessToken = () => {
-  useAuthStore.getState().logout();
+  useAuthStore.setState({
+    accessToken: null,
+    isAuthenticated: false,
+    user: null,
+  });
+};
+
+// NOTE: refreshToken을 쿠키에 저장하는 함수
+const setRefreshTokenToCookie = (token: string) => {
+  if (typeof document === "undefined") return;
+
+  document.cookie = `refreshToken=${token}; path=/; max-age=${
+    28 * 24 * 60 * 60
+  }; secure=${process.env.NODE_ENV === "production"}; samesite=strict`;
+};
+
+// NOTE: refreshToken을 쿠키에서 제거하는 함수
+const removeRefreshTokenFromCookie = () => {
+  if (typeof document === "undefined") return;
+
+  document.cookie = "refreshToken=; path=/;";
 };
 
 const getRefreshTokenFromCookie = (): string | null => {
@@ -46,7 +66,7 @@ export const refreshAccessToken = async (): Promise<string | null> => {
       },
       credentials: "include",
       body: JSON.stringify({
-        refreshToken: refreshToken,
+        refreshToken,
       }),
     });
 
@@ -55,9 +75,15 @@ export const refreshAccessToken = async (): Promise<string | null> => {
     }
 
     const { data } = await response.json();
+    console.log(data);
 
     if (data.accessToken) {
       setAccessToken(data.accessToken);
+
+      if (data.refreshToken) {
+        setRefreshTokenToCookie(data.refreshToken);
+      }
+
       return data.accessToken;
     }
 
@@ -66,6 +92,12 @@ export const refreshAccessToken = async (): Promise<string | null> => {
     console.error("토큰 갱신 중 오류:", error);
     return null;
   }
+};
+
+// NOTE: 로그아웃 시 모든 토큰 제거
+export const logout = () => {
+  removeAccessToken();
+  removeRefreshTokenFromCookie();
 };
 
 // NOTE: 자동 토큰 갱신 초기화

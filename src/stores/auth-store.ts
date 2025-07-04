@@ -44,11 +44,6 @@ export const useAuthStore = create<AuthStore>()(
         }),
 
       logout: () => {
-        if (typeof document !== "undefined") {
-          document.cookie =
-            "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        }
-
         set({
           accessToken: null,
           isAuthenticated: false,
@@ -57,11 +52,6 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       clearAuth: () => {
-        if (typeof document !== "undefined") {
-          document.cookie =
-            "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        }
-
         set({
           accessToken: null,
           isAuthenticated: false,

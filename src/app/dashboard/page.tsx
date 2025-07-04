@@ -14,6 +14,7 @@ import {
   Settings,
 } from "lucide-react";
 import { logoutAction, type LogoutState } from "@/app/actions/logout";
+import { logout } from "@/lib/auth";
 
 const initialState: LogoutState = {};
 
@@ -24,7 +25,8 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (logoutState.success) {
-      useAuthStore.getState().logout();
+      // NOTE: 클라이언트 사이드에서 모든 토큰 제거
+      logout();
       router.push("/");
     }
   }, [logoutState.success, router]);

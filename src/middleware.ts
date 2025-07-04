@@ -18,7 +18,7 @@ export function middleware(request: NextRequest) {
   const isPublicRoute = publicRoutes.some((route) => pathname === route);
 
   const refreshToken = request.cookies.get("refreshToken");
-  const isAuthenticated = !!refreshToken;
+  const isAuthenticated = !!refreshToken?.value; // TODO: 유효한 토큰인지 확인 필요
 
   // NOTE: 인증되지 않은 사용자가 접근하려는 경우
   if (isProtectedRoute) {
