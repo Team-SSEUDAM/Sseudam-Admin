@@ -27,7 +27,6 @@ export const useAuthStore = create<AuthStore>()(
       isAuthenticated: false,
       user: null,
 
-      // NOTE: Actions
       setAccessToken: (token: string) =>
         set({
           accessToken: token,

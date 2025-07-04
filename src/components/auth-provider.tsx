@@ -33,7 +33,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     initAuth();
   }, [router]);
 
-  // 로딩 중일 때 스피너 표시
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -45,6 +44,5 @@ export function AuthProvider({ children }: AuthProviderProps) {
     );
   }
 
-  // 초기화 완료 후 자식 컴포넌트 렌더링
   return <>{children}</>;
 }
