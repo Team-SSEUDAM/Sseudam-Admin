@@ -6,42 +6,7 @@ const protectedRoutes = ["/dashboard"];
 // NOTE: 공개 URL
 const publicRoutes = ["/"];
 
-// NOTE: 토큰 갱신 함수
-async function refreshToken(
-  refreshToken: string
-): Promise<{ success: boolean; newRefreshToken?: string }> {
-  try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
-    const response = await fetch(`${apiUrl}/v1/admin/reissue`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ refreshToken }),
-    });
-
-    if (!response.ok) {
-      return { success: false };
-    }
-
-    const { data } = await response.json();
-
-    if (data.accessToken && data.refreshToken) {
-      return {
-        success: true,
-        newRefreshToken: data.refreshToken,
-      };
-    }
-
-    return { success: false };
-  } catch (error) {
-    console.error("토큰 갱신 실패:", error);
-    return { success: false };
-  }
-}
-
-export async function middleware(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   console.log(`[Middleware] 접근 경로: ${pathname}`);
@@ -53,30 +18,7 @@ export async function middleware(request: NextRequest) {
   const isPublicRoute = publicRoutes.some((route) => pathname === route);
 
   const refreshTokenCookie = request.cookies.get("refreshToken");
-  let isAuthenticated = !!refreshTokenCookie?.value;
-
-  // NOTE: 보호된 라우트 접근 시 토큰 유효성 검증 및 갱신 시도
-  if (isProtectedRoute && refreshTokenCookie?.value) {
-    const refreshResult = await refreshToken(refreshTokenCookie.value);
-
-    if (refreshResult.success) {
-      isAuthenticated = true;
-
-      // NOTE: 새로운 refreshToken이 있다면 쿠키 업데이트
-      if (refreshResult.newRefreshToken) {
-        const response = NextResponse.next();
-        response.cookies.set("refreshToken", refreshResult.newRefreshToken, {
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "strict",
-          maxAge: 28 * 24 * 60 * 60,
-          path: "/",
-        });
-        return response;
-      }
-    } else {
-      isAuthenticated = false;
-    }
-  }
+  const isAuthenticated = !!refreshTokenCookie?.value;
 
   // NOTE: 인증되지 않은 사용자가 보호된 라우트 접근 시
   if (isProtectedRoute && !isAuthenticated) {
