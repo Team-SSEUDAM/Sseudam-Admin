@@ -49,6 +49,7 @@ export function useSuggestions() {
     currentPage,
     allItems,
     hasNextPage: data?.nextPage !== undefined,
+    totalCount: data?.totalCount ?? 0,
     handlePreviousPage,
     handleNextPage,
   };

@@ -35,4 +35,5 @@ export type SuggestionDetailResponse = ApiResponse<TrashCanSuggestion>;
 export interface SuggestionPage {
   list: TrashCanSuggestion[];
   nextPage?: number;
+  totalCount: number;
 }

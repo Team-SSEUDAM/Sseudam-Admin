@@ -1,12 +1,11 @@
 import { apiRequest } from "@/lib/auth";
+import { PAGE_SIZE } from "@/constants/pagination";
 import type {
   SuggestionPage,
   SuggestionDetailResponse,
   TrashCanSuggestion,
   TrashCanSuggestionResponse,
 } from "@/types/suggestion";
-
-const PAGE_SIZE = 20;
 
 export async function fetchSuggestions({
   page = 0,
@@ -26,10 +25,12 @@ export async function fetchSuggestions({
   }
 
   const list = apiResponse.data.list;
+  const totalCount = apiResponse.data.totalCount;
 
   return {
     list,
     nextPage: list.length === PAGE_SIZE ? page + 1 : undefined,
+    totalCount,
   };
 }
 

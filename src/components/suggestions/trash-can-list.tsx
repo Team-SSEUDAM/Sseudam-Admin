@@ -1,6 +1,7 @@
 "use client";
 
 import { useSuggestions } from "@/hooks/useSuggestions";
+import { PAGE_SIZE } from "@/constants/pagination";
 import TrashCanListItem from "./trash-can-list-item";
 import TrashCanPagination from "./trash-can-pagination";
 
@@ -9,9 +10,12 @@ export default function TrashCanList() {
     currentPage,
     allItems,
     hasNextPage,
+    totalCount,
     handlePreviousPage,
     handleNextPage,
   } = useSuggestions();
+
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
   const handleApprove = (id: number) => {
     // TODO: 승인 API 호출
@@ -27,12 +31,8 @@ export default function TrashCanList() {
     <div>
       <div className="flex justify-between items-center mb-4">
         <div className="text-sm text-gray-500">
-          페이지 {currentPage}
-          {allItems.length > 0 && (
-            <span className="ml-2 text-gray-400">
-              (총 {allItems.length}개 제보)
-            </span>
-          )}
+          페이지 {currentPage} / {totalPages}
+          <span className="ml-2 text-gray-400">(총 {totalCount}개 제보)</span>
         </div>
       </div>
 
@@ -54,6 +54,7 @@ export default function TrashCanList() {
 
       <TrashCanPagination
         currentPage={currentPage}
+        totalPages={totalPages}
         hasNextPage={hasNextPage}
         onPreviousPage={handlePreviousPage}
         onNextPage={handleNextPage}
