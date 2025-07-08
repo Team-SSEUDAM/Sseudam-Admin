@@ -14,6 +14,7 @@ interface TrashCanPaginationProps {
   hasNextPage: boolean;
   onPreviousPage: () => void;
   onNextPage: () => void;
+  searchStatus?: string;
 }
 
 const PAGE_VIEW_COUNT = 7;
@@ -24,8 +25,9 @@ export default function TrashCanPagination({
   hasNextPage,
   onPreviousPage,
   onNextPage,
+  searchStatus = "ALL",
 }: TrashCanPaginationProps) {
-  // 페이지네이션 로직: 1, 2, ... n-1, n (7개 이하면 모두, 많으면 ...)
+  // NOTE: 페이지네이션 로직: 1, 2, ... n-1, n (7개 이하면 모두, 많으면 ...)
   const getPageNumbers = () => {
     if (totalPages <= PAGE_VIEW_COUNT) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -57,6 +59,15 @@ export default function TrashCanPagination({
 
   const pageNumbers = getPageNumbers();
 
+  const makeHref = (page: number) => {
+    const params = new URLSearchParams();
+    params.set("page", page.toString());
+    if (searchStatus && searchStatus !== "ALL") {
+      params.set("searchStatus", searchStatus);
+    }
+    return `?${params.toString()}`;
+  };
+
   return (
     <Pagination className="my-8">
       <PaginationContent>
@@ -79,7 +90,7 @@ export default function TrashCanPagination({
             <PaginationItem key={num}>
               <PaginationLink
                 isActive={currentPage === num}
-                href={`?page=${num}`}
+                href={makeHref(num as number)}
               >
                 {num}
               </PaginationLink>

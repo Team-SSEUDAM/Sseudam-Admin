@@ -15,9 +15,11 @@ export function useSuggestions() {
     return isNaN(page) || page < 1 ? 1 : page;
   }, [searchParams]);
 
+  const searchStatus = searchParams.get("searchStatus") || "ALL";
+
   const { data } = useSuspenseQuery<SuggestionPage, Error>({
-    queryKey: ["suggestions", currentPage],
-    queryFn: () => fetchSuggestions({ page: currentPage - 1 }), // NOTE: API는 0부터 시작하므로 -1
+    queryKey: ["suggestions", currentPage, searchStatus],
+    queryFn: () => fetchSuggestions({ page: currentPage - 1, searchStatus }),
     retry: false,
   });
 
@@ -25,6 +27,16 @@ export function useSuggestions() {
     (newPage: number) => {
       const params = new URLSearchParams(searchParams);
       params.set("page", newPage.toString());
+      router.push(`${pathname}?${params.toString()}`);
+    },
+    [searchParams, router, pathname]
+  );
+
+  const updateStatus = useCallback(
+    (newStatus: string) => {
+      const params = new URLSearchParams(searchParams);
+      params.set("searchStatus", newStatus);
+      params.set("page", "1"); // 필터 변경 시 1페이지로 이동
       router.push(`${pathname}?${params.toString()}`);
     },
     [searchParams, router, pathname]
@@ -52,5 +64,7 @@ export function useSuggestions() {
     totalCount: data?.totalCount ?? 0,
     handlePreviousPage,
     handleNextPage,
+    searchStatus,
+    updateStatus,
   };
 }

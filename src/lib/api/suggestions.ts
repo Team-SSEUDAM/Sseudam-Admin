@@ -10,12 +10,17 @@ import type {
 
 export async function fetchSuggestions({
   page = 0,
+  searchStatus,
 }: {
   page: number;
+  searchStatus?: string;
 }): Promise<SuggestionPage> {
-  const url =
+  let url =
     process.env.NEXT_PUBLIC_API_URL +
     `/v1/admin/suggestions?page=${page}&size=${PAGE_SIZE}`;
+  if (searchStatus && searchStatus !== "ALL") {
+    url += `&searchStatus=${searchStatus}`;
+  }
   const res = await apiRequest(url);
   if (!res.ok) throw new Error("데이터를 불러오지 못했습니다");
 
