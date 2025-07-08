@@ -1,6 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateSuggestionStatus } from "@/lib/api/suggestions";
-import type { SuggestionStatus, SuggestionPage } from "@/types/suggestion";
+import type {
+  SuggestionStatus,
+  SuggestionPage,
+  TrashCanSuggestion,
+} from "@/types/suggestion";
+import { toast } from "@/components/ui/sonner";
 
 /**
  * @typedef {object} UseSuggestionActionParams
@@ -36,7 +41,7 @@ export function useSuggestionAction() {
         if (!data) return;
         queryClient.setQueryData<SuggestionPage>(queryKey, {
           ...data,
-          list: data.list.map((item) =>
+          list: data.list.map((item: TrashCanSuggestion) =>
             item.id === id ? { ...item, status } : item
           ),
         });
@@ -56,6 +61,14 @@ export function useSuggestionAction() {
             queryClient.setQueryData(queryKey, data);
           }
         );
+      }
+      toast.error("요청에 실패하였습니다.");
+    },
+    onSuccess: (_data, variables) => {
+      if (variables.status === "APPROVE") {
+        toast.success("제보가 승인되었습니다.");
+      } else if (variables.status === "REJECT") {
+        toast.success("제보가 반려되었습니다.");
       }
     },
     onSettled: () => {
