@@ -1,4 +1,5 @@
 import { SUGGESTION_STATUS, TRASH_TYPE } from "@/constants/suggestion";
+import { ApiResponse } from "./api";
 
 export type TrashType = (typeof TRASH_TYPE)[keyof typeof TRASH_TYPE];
 export type SuggestionStatus =
@@ -21,21 +22,15 @@ export interface TrashCanSuggestion {
   createdAt: string;
 }
 
-export interface ApiResponse {
-  success: boolean;
-  status: number;
-  data: {
-    list: TrashCanSuggestion[];
-  };
-  timestamp: string;
+export interface TrashCanSuggestionResponseData {
+  list: TrashCanSuggestion[];
+  totalCount: number;
 }
 
-export interface SuggestionDetailResponse {
-  success: boolean;
-  status: number;
-  data: TrashCanSuggestion;
-  timestamp: string;
-}
+export type TrashCanSuggestionResponse =
+  ApiResponse<TrashCanSuggestionResponseData>;
+
+export type SuggestionDetailResponse = ApiResponse<TrashCanSuggestion>;
 
 export interface SuggestionPage {
   list: TrashCanSuggestion[];

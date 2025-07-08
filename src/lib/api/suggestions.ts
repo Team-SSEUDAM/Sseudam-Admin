@@ -1,9 +1,9 @@
 import { apiRequest } from "@/lib/auth";
 import type {
   SuggestionPage,
-  ApiResponse,
   SuggestionDetailResponse,
   TrashCanSuggestion,
+  TrashCanSuggestionResponse,
 } from "@/types/suggestion";
 
 const PAGE_SIZE = 20;
@@ -19,7 +19,7 @@ export async function fetchSuggestions({
   const res = await apiRequest(url);
   if (!res.ok) throw new Error("데이터를 불러오지 못했습니다");
 
-  const apiResponse: ApiResponse = await res.json();
+  const apiResponse: TrashCanSuggestionResponse = await res.json();
 
   if (!apiResponse.success) {
     throw new Error("API 요청이 실패했습니다");
