@@ -1,44 +1,101 @@
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationPrevious,
+  PaginationNext,
+  PaginationEllipsis,
+} from "@/components/ui/pagination";
 
 interface TrashCanPaginationProps {
   currentPage: number;
+  totalPages: number;
   hasNextPage: boolean;
   onPreviousPage: () => void;
   onNextPage: () => void;
 }
 
+const PAGE_VIEW_COUNT = 7;
+
 export default function TrashCanPagination({
   currentPage,
+  totalPages,
   hasNextPage,
   onPreviousPage,
   onNextPage,
 }: TrashCanPaginationProps) {
+  // 페이지네이션 로직: 1, 2, ... n-1, n (7개 이하면 모두, 많으면 ...)
+  const getPageNumbers = () => {
+    if (totalPages <= PAGE_VIEW_COUNT) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+    if (currentPage <= 4) {
+      return [1, 2, 3, 4, 5, "ellipsis", totalPages];
+    }
+    if (currentPage >= totalPages - 3) {
+      return [
+        1,
+        "ellipsis",
+        totalPages - 4,
+        totalPages - 3,
+        totalPages - 2,
+        totalPages - 1,
+        totalPages,
+      ];
+    }
+    return [
+      1,
+      "ellipsis",
+      currentPage - 1,
+      currentPage,
+      currentPage + 1,
+      "ellipsis",
+      totalPages,
+    ];
+  };
+
+  const pageNumbers = getPageNumbers();
+
   return (
-    <div className="flex justify-center items-center gap-4 mt-8">
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={onPreviousPage}
-        disabled={currentPage === 1}
-        className="flex items-center gap-1"
-      >
-        <ChevronLeft className="w-4 h-4" />
-        이전
-      </Button>
+    <Pagination className="my-8">
+      <PaginationContent>
+        {/* 이전 페이지 */}
+        <PaginationItem>
+          <PaginationPrevious
+            onClick={onPreviousPage}
+            aria-disabled={currentPage === 1}
+            tabIndex={currentPage === 1 ? -1 : 0}
+          />
+        </PaginationItem>
 
-      <span className="text-sm text-gray-600">{currentPage} 페이지</span>
+        {/* 페이지 번호 */}
+        {pageNumbers.map((num, idx) =>
+          num === "ellipsis" ? (
+            <PaginationItem key={`ellipsis-${idx}`}>
+              <PaginationEllipsis />
+            </PaginationItem>
+          ) : (
+            <PaginationItem key={num}>
+              <PaginationLink
+                isActive={currentPage === num}
+                href={`?page=${num}`}
+              >
+                {num}
+              </PaginationLink>
+            </PaginationItem>
+          )
+        )}
 
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={onNextPage}
-        disabled={!hasNextPage}
-        className="flex items-center gap-1"
-      >
-        다음
-        <ChevronRight className="w-4 h-4" />
-      </Button>
-    </div>
+        {/* 다음 페이지 */}
+        <PaginationItem>
+          <PaginationNext
+            onClick={onNextPage}
+            aria-disabled={!hasNextPage}
+            tabIndex={!hasNextPage ? -1 : 0}
+          />
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
   );
 }
