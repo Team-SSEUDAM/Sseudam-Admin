@@ -35,7 +35,7 @@ export default function AdminHeader() {
               href="/suggestions/trash-cans"
               className="hover:text-blue-600 transition-colors"
             >
-              쓰레기통 제보
+              제보
             </Link>
           </nav>
         </div>
