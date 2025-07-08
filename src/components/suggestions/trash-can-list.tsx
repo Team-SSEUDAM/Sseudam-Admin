@@ -4,6 +4,7 @@ import { useSuggestions } from "@/hooks/useSuggestions";
 import { PAGE_SIZE } from "@/constants/pagination";
 import TrashCanListItem from "./trash-can-list-item";
 import TrashCanPagination from "./trash-can-pagination";
+import { useSuggestionAction } from "@/hooks/useSuggestionAction";
 
 export default function TrashCanList() {
   const {
@@ -15,16 +16,16 @@ export default function TrashCanList() {
     handleNextPage,
   } = useSuggestions();
 
+  const { mutate: mutateSuggestionStatus } = useSuggestionAction();
+
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
   const handleApprove = (id: number) => {
-    // TODO: 승인 API 호출
-    console.log("승인:", id);
+    mutateSuggestionStatus({ id, status: "APPROVE" });
   };
 
   const handleReject = (id: number) => {
-    // TODO: 반려 API 호출
-    console.log("반려:", id);
+    mutateSuggestionStatus({ id, status: "REJECT" });
   };
 
   return (

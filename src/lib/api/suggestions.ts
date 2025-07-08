@@ -5,6 +5,7 @@ import type {
   SuggestionDetailResponse,
   TrashCanSuggestion,
   TrashCanSuggestionResponse,
+  SuggestionStatus,
 } from "@/types/suggestion";
 
 export async function fetchSuggestions({
@@ -51,4 +52,23 @@ export async function fetchSuggestionDetail(
   }
 
   return apiResponse.data;
+}
+
+export async function updateSuggestionStatus({
+  id,
+  status,
+}: {
+  id: number;
+  status: SuggestionStatus;
+}): Promise<void> {
+  const url =
+    process.env.NEXT_PUBLIC_API_URL +
+    `/v1/admin/suggestions/${id}?status=${status}`;
+  const res = await apiRequest(url, {
+    method: "PUT",
+  });
+
+  if (!res.ok) {
+    throw new Error("제보 상태 변경에 실패했습니다");
+  }
 }
