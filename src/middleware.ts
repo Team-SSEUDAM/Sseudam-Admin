@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // NOTE: 인증 URL (temp)
-const protectedRoutes = ["/dashboard", "/suggestions"];
+const protectedRoutes = ["/suggestions"];
 // NOTE: 공개 URL
 const publicRoutes = ["/"];
 
@@ -32,10 +32,10 @@ export function middleware(request: NextRequest) {
   // NOTE: 이미 인증된 사용자가 로그인 페이지 접근 시
   if (isPublicRoute && isAuthenticated && pathname === "/") {
     console.log(
-      `[Middleware] 인증된 사용자가 로그인 페이지 접근: ${pathname} → /dashboard로 리다이렉트`
+      `[Middleware] 인증된 사용자가 로그인 페이지 접근: ${pathname} → /suggestions/trash-cans로 리다이렉트`
     );
-    const dashboardUrl = new URL("/dashboard", request.url);
-    return NextResponse.redirect(dashboardUrl);
+    const suggestionsUrl = new URL("/suggestions/trash-cans", request.url);
+    return NextResponse.redirect(suggestionsUrl);
   }
 
   // NOTE: 그 외의 경우는 정상적으로 진행

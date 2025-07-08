@@ -26,7 +26,7 @@ export function LoginForm() {
   useEffect(() => {
     if (loginState.success && loginState.accessToken) {
       login(loginState.accessToken, null);
-      router.push("/dashboard");
+      router.push("/suggestions/trash-cans");
     }
   }, [loginState.success, loginState.accessToken, login, router]);
 
