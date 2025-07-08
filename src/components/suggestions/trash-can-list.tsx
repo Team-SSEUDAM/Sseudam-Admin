@@ -34,11 +34,11 @@ export default function TrashCanList() {
   const { mutate: mutateSuggestionStatus } = useSuggestionAction();
 
   const handleApprove = (id: number) => {
-    mutateSuggestionStatus({ id, status: "APPROVE" });
+    mutateSuggestionStatus({ id, status: SUGGESTION_STATUS.APPROVE });
   };
 
   const handleReject = (id: number) => {
-    mutateSuggestionStatus({ id, status: "REJECT" });
+    mutateSuggestionStatus({ id, status: SUGGESTION_STATUS.REJECT });
   };
 
   const handleFilterChange = (status: string) => {

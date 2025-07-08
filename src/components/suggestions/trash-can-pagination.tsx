@@ -17,7 +17,10 @@ interface TrashCanPaginationProps {
   searchStatus?: string;
 }
 
-const PAGE_VIEW_COUNT = 7;
+const START_THRESHOLD = 4;
+const END_THRESHOLD = 3;
+const PAGE_VIEW_COUNT = START_THRESHOLD + END_THRESHOLD;
+const EDGE_BUFFER = 1;
 
 export default function TrashCanPagination({
   currentPage,
@@ -29,13 +32,14 @@ export default function TrashCanPagination({
 }: TrashCanPaginationProps) {
   // NOTE: 페이지네이션 로직: 1, 2, ... n-1, n (7개 이하면 모두, 많으면 ...)
   const getPageNumbers = () => {
+    if (totalPages <= 0) return [];
     if (totalPages <= PAGE_VIEW_COUNT) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
-    if (currentPage <= 4) {
+    if (currentPage <= START_THRESHOLD) {
       return [1, 2, 3, 4, 5, "ellipsis", totalPages];
     }
-    if (currentPage >= totalPages - 3) {
+    if (currentPage >= totalPages - END_THRESHOLD) {
       return [
         1,
         "ellipsis",
@@ -49,9 +53,9 @@ export default function TrashCanPagination({
     return [
       1,
       "ellipsis",
-      currentPage - 1,
+      currentPage - EDGE_BUFFER,
       currentPage,
-      currentPage + 1,
+      currentPage + EDGE_BUFFER,
       "ellipsis",
       totalPages,
     ];
