@@ -131,23 +131,23 @@ export default function ReportListItem({
               {/* 승인/반려 버튼 */}
               {isPending && (onApprove || onReject) && (
                 <div className="flex justify-end gap-2 pt-2">
+                  {onApprove && (
+                    <Button
+                      onClick={() => onApprove(item.id, item.spotId)}
+                      size="md"
+                      className="bg-blue-600 hover:bg-blue-700"
+                    >
+                      승인
+                    </Button>
+                  )}
                   {onReject && (
                     <Button
                       onClick={() => onReject(item.id, item.spotId)}
-                      size="sm"
+                      size="md"
                       variant="outline"
                       className="text-red-600 border-red-200 hover:bg-red-50"
                     >
                       반려
-                    </Button>
-                  )}
-                  {onApprove && (
-                    <Button
-                      onClick={() => onApprove(item.id, item.spotId)}
-                      size="sm"
-                      className="bg-blue-600 hover:bg-blue-700"
-                    >
-                      승인
                     </Button>
                   )}
                 </div>
