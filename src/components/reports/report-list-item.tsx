@@ -118,8 +118,8 @@ export default function ReportListItem({
                         <Image
                           src={item.imageUrl}
                           alt="신고 이미지"
-                          width={360}
-                          height={270}
+                          width={400}
+                          height={300}
                           className="rounded-md object-cover"
                         />
                       </div>
@@ -128,7 +128,6 @@ export default function ReportListItem({
                 </div>
               </div>
 
-              {/* 승인/반려 버튼 */}
               {isPending && (onApprove || onReject) && (
                 <div className="flex justify-end gap-2 pt-2">
                   {onApprove && (
