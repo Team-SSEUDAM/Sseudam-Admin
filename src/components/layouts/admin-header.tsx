@@ -37,6 +37,12 @@ export default function AdminHeader() {
             >
               제보
             </Link>
+            <Link
+              href="/reports/trash-cans"
+              className="hover:text-blue-600 transition-colors"
+            >
+              신고
+            </Link>
           </nav>
         </div>
         <div className="flex items-center gap-3">

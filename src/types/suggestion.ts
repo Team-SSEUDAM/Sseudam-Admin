@@ -1,9 +1,9 @@
-import { SUGGESTION_STATUS, TRASH_TYPE } from "@/constants/suggestion";
+import { TRASH_TYPE } from "@/constants/suggestion";
 import { ApiResponse } from "./api";
+import type { CommonStatus } from "@/constants/status";
 
 export type TrashType = (typeof TRASH_TYPE)[keyof typeof TRASH_TYPE];
-export type SuggestionStatus =
-  (typeof SUGGESTION_STATUS)[keyof typeof SUGGESTION_STATUS];
+export type SuggestionStatus = CommonStatus;
 
 export interface TrashCanSuggestion {
   id: number;
