@@ -47,7 +47,7 @@ export interface TrashCanReport {
   reportType: ReportType;
   point: Point;
   address: Address;
-  trashType: string;
+  trashType: TrashType;
   spotName: string;
   imageUrl: string;
   status: ReportStatus;
