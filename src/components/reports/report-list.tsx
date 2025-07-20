@@ -1,23 +1,23 @@
 "use client";
 
-import { useSuggestions } from "@/hooks/useSuggestions";
+import { useReports } from "@/hooks/useReports";
+import { useReportAction } from "@/hooks/useReportAction";
 import { PAGE_SIZE } from "@/constants/pagination";
-import TrashCanListItem from "./trash-can-list-item";
-import TrashCanPagination from "./trash-can-pagination";
-import { useSuggestionAction } from "@/hooks/useSuggestionAction";
+import { REPORT_TYPE } from "@/types/report";
 import { COMMON_STATUS } from "@/constants/status";
-import { STATUS_LABELS } from "@/constants/status";
 import { Button } from "@/components/ui/button";
+import ReportListItem from "./report-list-item";
+import ReportPagination from "./report-pagination";
 
-const STATUS_FILTERS = [
+const TYPE_FILTERS = [
   { value: "ALL", label: "전체" },
-  ...Object.values(COMMON_STATUS).map((value) => ({
-    value,
-    label: STATUS_LABELS[value],
-  })),
+  { value: REPORT_TYPE.POINT, label: "좌표" },
+  { value: REPORT_TYPE.PHOTO, label: "사진" },
+  { value: REPORT_TYPE.NAME, label: "이름" },
+  { value: REPORT_TYPE.KIND, label: "종류" },
 ] as const;
 
-export default function TrashCanList() {
+export default function ReportList() {
   const {
     currentPage,
     allItems,
@@ -25,32 +25,32 @@ export default function TrashCanList() {
     totalCount,
     handlePreviousPage,
     handleNextPage,
-    searchStatus,
-    updateStatus,
-  } = useSuggestions();
+    searchType,
+    updateType,
+  } = useReports();
 
-  const { mutate: mutateSuggestionStatus } = useSuggestionAction();
+  const { mutate: mutateReportStatus } = useReportAction();
 
-  const handleApprove = (id: number) => {
-    mutateSuggestionStatus({ id, status: COMMON_STATUS.APPROVE });
+  const handleApprove = (reportId: number, spotId: number) => {
+    mutateReportStatus({ reportId, spotId, status: COMMON_STATUS.APPROVE });
   };
 
-  const handleReject = (id: number) => {
-    mutateSuggestionStatus({ id, status: COMMON_STATUS.REJECT });
+  const handleReject = (reportId: number, spotId: number) => {
+    mutateReportStatus({ reportId, spotId, status: COMMON_STATUS.REJECT });
   };
 
-  const handleFilterChange = (status: string) => {
-    updateStatus(status);
+  const handleFilterChange = (type: string) => {
+    updateType(type);
   };
 
   return (
     <div>
-      {/* 상태별 필터 버튼 */}
+      {/* 타입별 필터 버튼 */}
       <div className="flex gap-2 mb-4">
-        {STATUS_FILTERS.map((filter) => (
+        {TYPE_FILTERS.map((filter) => (
           <Button
             key={filter.value}
-            variant={searchStatus === filter.value ? "default" : "outline"}
+            variant={searchType === filter.value ? "default" : "outline"}
             onClick={() => handleFilterChange(filter.value)}
             size="sm"
           >
@@ -63,13 +63,13 @@ export default function TrashCanList() {
         <div className="text-sm text-gray-500">
           페이지 {currentPage} /{" "}
           {Math.max(1, Math.ceil(totalCount / PAGE_SIZE))}
-          <span className="ml-2 text-gray-400">(총 {totalCount}개 제보)</span>
+          <span className="ml-2 text-gray-400">(총 {totalCount}개 신고)</span>
         </div>
       </div>
 
       <div className="space-y-4">
         {allItems.map((item) => (
-          <TrashCanListItem
+          <ReportListItem
             key={item.id}
             item={item}
             onApprove={handleApprove}
@@ -78,18 +78,18 @@ export default function TrashCanList() {
         ))}
         {allItems.length === 0 && (
           <div className="text-center text-gray-400 py-12">
-            해당 상태의 제보가 없습니다.
+            해당 타입의 신고가 없습니다.
           </div>
         )}
       </div>
 
-      <TrashCanPagination
+      <ReportPagination
         currentPage={currentPage}
         totalPages={Math.max(1, Math.ceil(totalCount / PAGE_SIZE))}
         hasNextPage={hasNextPage}
         onPreviousPage={handlePreviousPage}
         onNextPage={handleNextPage}
-        searchStatus={searchStatus}
+        searchType={searchType}
       />
     </div>
   );

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // NOTE: 인증 URL (temp)
-const protectedRoutes = ["/suggestions"];
+const protectedRoutes = ["/suggestions", "/reports"];
 // NOTE: 공개 URL
 const publicRoutes = ["/"];
 
