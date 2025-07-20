@@ -1,14 +1,10 @@
 import type { TrashCanReport } from "@/types/report";
-import type { TrashType } from "@/types/suggestion";
 import {
   formatRelativeTime,
   formatReportType,
   formatReportStatus,
-  formatTrashType,
   getReportTypeColorClass,
   getReportStatusColorClass,
-  getTrashTypeColorClass,
-  getGoogleMapSearchUrl,
 } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -19,7 +15,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import Image from "next/image";
+import TrashSpotComparison from "./trash-spot-comparison";
 
 interface ReportListItemProps {
   item: TrashCanReport;
@@ -33,7 +29,6 @@ export default function ReportListItem({
   onReject,
 }: ReportListItemProps) {
   const isPending = item.status === "WAITING";
-  const [lng, lat] = item.point.coordinates;
 
   return (
     <Card className="hover:shadow-md transition-shadow py-2">
@@ -72,61 +67,8 @@ export default function ReportListItem({
 
           <AccordionContent className="px-4 pb-4">
             <div className="space-y-3">
-              <div>
-                <h4 className="font-medium text-sm mb-2">신고 상세 정보</h4>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">위치:</span>
-                    <span className="text-gray-900">
-                      {item.address.city} - {item.address.site}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">좌표:</span>
-                    <div className="flex items-center gap-2">
-                      <span className="text-gray-900">
-                        {lat}, {lng}
-                      </span>
-                      <a
-                        href={getGoogleMapSearchUrl(lat, lng)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
-                      >
-                        Google Map
-                      </a>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">쓰레기 종류:</span>
-                    <Badge
-                      variant="outline"
-                      className={getTrashTypeColorClass(
-                        item.trashType as TrashType
-                      )}
-                    >
-                      {formatTrashType(item.trashType as TrashType)}
-                    </Badge>
-                  </div>
-
-                  {item.imageUrl && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">이미지:</span>
-                      <div className="flex-shrink-0">
-                        <Image
-                          src={item.imageUrl}
-                          alt="신고 이미지"
-                          width={400}
-                          height={300}
-                          className="rounded-md object-cover"
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
+              {/* 변경사항 비교 */}
+              <TrashSpotComparison report={item} />
 
               {isPending && (onApprove || onReject) && (
                 <div className="flex justify-end gap-2 pt-2">

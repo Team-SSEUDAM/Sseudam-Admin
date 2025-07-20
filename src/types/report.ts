@@ -1,5 +1,6 @@
 import { ApiResponse } from "./api";
 import type { CommonStatus } from "@/constants/status";
+import { TrashType } from "./suggestion";
 
 /**
  * 신고 타입 상수
@@ -24,6 +25,21 @@ export interface Address {
   site: string;
 }
 
+export interface TrashSpot {
+  id: number;
+  suggestionerId?: number;
+  suggestionerName?: string;
+  name: string;
+  region: string;
+  address: Address;
+  point: Point;
+  trashType: TrashType;
+  visitCount: number;
+  imageUrl?: string;
+  lastVisitAt?: string;
+  updatedAt: string;
+}
+
 export interface TrashCanReport {
   id: number;
   spotId: number;
@@ -32,6 +48,7 @@ export interface TrashCanReport {
   point: Point;
   address: Address;
   trashType: string;
+  spotName: string;
   imageUrl: string;
   status: ReportStatus;
   createdAt: string;
