@@ -43,6 +43,12 @@ export default function AdminHeader() {
             >
               신고
             </Link>
+            <Link
+              href="/users"
+              className="hover:text-blue-600 transition-colors"
+            >
+              유저
+            </Link>
           </nav>
         </div>
         <div className="flex items-center gap-3">
