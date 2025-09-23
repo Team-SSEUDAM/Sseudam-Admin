@@ -11,8 +11,8 @@ const PAGE_SIZE = 10;
 export default function UserList() {
   const searchParams = useSearchParams();
 
-  const page = parseInt(searchParams.get("page") || "0");
-  const params = { page, size: PAGE_SIZE };
+  const page = parseInt(searchParams.get("page") || "1");
+  const params = { page: page - 1, size: PAGE_SIZE };
 
   const { data, isLoading, error } = useUsers(params);
 
