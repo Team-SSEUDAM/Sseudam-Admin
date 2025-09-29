@@ -67,10 +67,13 @@ export async function updateSuggestionStatus({
   status: SuggestionStatus;
 }): Promise<void> {
   const url =
-    process.env.NEXT_PUBLIC_API_URL +
-    `/v1/admin/suggestions/${id}?status=${status}`;
+    process.env.NEXT_PUBLIC_API_URL + `/v1/admin/suggestions/${id}`;
   const res = await apiRequest(url, {
     method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ status }),
   });
 
   if (!res.ok) {
