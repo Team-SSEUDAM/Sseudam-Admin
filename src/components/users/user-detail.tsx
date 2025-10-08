@@ -83,7 +83,7 @@ export default function UserDetail({ userId }: UserDetailProps) {
                     )}
                   </div>
                   <div className="text-xs text-gray-500">
-                    {formatRelativeTime(spot.createdAt)}
+                    {formatRelativeTime(spot.updatedAt)}
                   </div>
                 </div>
               </Card>

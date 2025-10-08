@@ -31,5 +31,5 @@ export interface VisitedSpot {
   trashType: TrashType;
   imageUrl?: string;
   status: ReportStatus;
-  createdAt: string;
+  updatedAt: string;
 }
