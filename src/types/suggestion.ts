@@ -16,6 +16,7 @@ export interface TrashCanSuggestion {
     city: string;
     site: string;
   };
+  spotName: string;
   trashType: TrashType;
   imageUrl: string;
   status: SuggestionStatus;

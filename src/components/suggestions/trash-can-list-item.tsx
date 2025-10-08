@@ -46,6 +46,9 @@ export default function TrashCanListItem({
                     {formatRelativeTime(item.createdAt)}
                   </span>
                 </div>
+                <div className="font-semibold truncate pb-1">
+                  {item.spotName}
+                </div>
                 <div className="text-sm text-muted-foreground truncate">
                   {item.address.city} - {item.address.site}
                 </div>
