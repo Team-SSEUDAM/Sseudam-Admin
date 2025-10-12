@@ -11,10 +11,12 @@ import { toast } from "@/components/ui/sonner";
  * @typedef {object} UseSuggestionActionParams
  * @property {number} id - 제보 ID
  * @property {SuggestionStatus} status - 변경할 상태
+ * @property {string} [reason] - 반려 사유 (반려 시 필수)
  */
 interface UseSuggestionActionParams {
   id: number;
   status: SuggestionStatus;
+  reason?: string;
 }
 
 /**
@@ -25,8 +27,8 @@ export function useSuggestionAction() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, status }: UseSuggestionActionParams) =>
-      updateSuggestionStatus({ id, status }),
+    mutationFn: ({ id, status, reason }: UseSuggestionActionParams) =>
+      updateSuggestionStatus({ id, status, reason }),
     onMutate: async ({ id, status }) => {
       const queries = queryClient.getQueriesData<SuggestionPage>({
         queryKey: ["suggestions"],

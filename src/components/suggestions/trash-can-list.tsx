@@ -35,8 +35,8 @@ export default function TrashCanList() {
     mutateSuggestionStatus({ id, status: COMMON_STATUS.APPROVE });
   };
 
-  const handleReject = (id: number) => {
-    mutateSuggestionStatus({ id, status: COMMON_STATUS.REJECT });
+  const handleReject = (id: number, reason: string) => {
+    mutateSuggestionStatus({ id, status: COMMON_STATUS.REJECT, reason });
   };
 
   const handleFilterChange = (status: string) => {

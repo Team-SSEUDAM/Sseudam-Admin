@@ -21,6 +21,7 @@ export interface TrashCanSuggestion {
   imageUrl: string;
   status: SuggestionStatus;
   createdAt: string;
+  rejectReason?: string;
 }
 
 export interface TrashCanSuggestionResponseData {
