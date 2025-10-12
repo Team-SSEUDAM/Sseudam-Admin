@@ -52,6 +52,7 @@ export interface TrashCanReport {
   imageUrl: string;
   status: ReportStatus;
   createdAt: string;
+  rejectReason?: string;
 }
 
 export interface ReportResponseData {

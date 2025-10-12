@@ -35,8 +35,17 @@ export default function ReportList() {
     mutateReportStatus({ reportId, spotId, status: COMMON_STATUS.APPROVE });
   };
 
-  const handleReject = (reportId: number, spotId: number) => {
-    mutateReportStatus({ reportId, spotId, status: COMMON_STATUS.REJECT });
+  const handleReject = (
+    reportId: number,
+    spotId: number,
+    rejectReason: string
+  ) => {
+    mutateReportStatus({
+      reportId,
+      spotId,
+      status: COMMON_STATUS.REJECT,
+      rejectReason,
+    });
   };
 
   const handleFilterChange = (type: string) => {
