@@ -60,15 +60,20 @@ export async function updateReportStatus({
   reportId,
   spotId,
   status,
+  rejectReason,
 }: {
   reportId: number;
   spotId: number;
   status: string;
+  rejectReason?: string;
 }): Promise<void> {
   const url = process.env.NEXT_PUBLIC_API_URL + `/v1/admin/reports/${reportId}`;
+  const body = rejectReason
+    ? { spotId, status, rejectReason }
+    : { spotId, status };
   const res = await apiRequest(url, {
     method: "PUT",
-    body: JSON.stringify({ spotId, status }),
+    body: JSON.stringify(body),
   });
 
   if (!res.ok) {

@@ -15,11 +15,13 @@ export function useReportAction() {
       reportId,
       spotId,
       status,
+      rejectReason,
     }: {
       reportId: number;
       spotId: number;
       status: string;
-    }) => updateReportStatus({ reportId, spotId, status }),
+      rejectReason?: string;
+    }) => updateReportStatus({ reportId, spotId, status, rejectReason }),
     onMutate: async ({ spotId, status }) => {
       const queries = queryClient.getQueriesData<ReportPage>({
         queryKey: ["reports"],

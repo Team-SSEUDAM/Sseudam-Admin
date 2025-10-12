@@ -62,18 +62,19 @@ export async function fetchSuggestionDetail(
 export async function updateSuggestionStatus({
   id,
   status,
+  reason,
 }: {
   id: number;
   status: SuggestionStatus;
+  reason?: string;
 }): Promise<void> {
-  const url =
-    process.env.NEXT_PUBLIC_API_URL + `/v1/admin/suggestions/${id}`;
+  const url = process.env.NEXT_PUBLIC_API_URL + `/v1/admin/suggestions/${id}`;
   const res = await apiRequest(url, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ status }),
+    body: JSON.stringify({ status, reason }),
   });
 
   if (!res.ok) {
