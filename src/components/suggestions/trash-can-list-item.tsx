@@ -3,6 +3,7 @@ import {
   formatRelativeTime,
   formatSuggestionStatus,
   formatTrashType,
+  getGoogleMapSearchUrl,
   getStatusColorClass,
   getTrashTypeColorClass,
 } from "@/lib/utils";
@@ -20,6 +21,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { CopyIcon } from "lucide-react";
 import { toast } from "sonner";
+import Link from "next/link";
 
 interface TrashCanListItemProps {
   item: TrashCanSuggestion;
@@ -38,6 +40,11 @@ export default function TrashCanListItem({
   const isRejected = item.status === "REJECT";
   const [selectedAction, setSelectedAction] = useState<string>("");
   const [rejectReason, setRejectReason] = useState<string>("");
+
+  const googleMapSearchUrl = getGoogleMapSearchUrl(
+    item.point.coordinates[1],
+    item.point.coordinates[0]
+  );
 
   const handleCopy = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -67,9 +74,15 @@ export default function TrashCanListItem({
                   </span>
                   <CopyIcon className="w-4 h-4" />
                 </button>
-                <div className="text-sm text-muted-foreground truncate">
+
+                <Link
+                  href={googleMapSearchUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-muted-foreground truncate hover:underline underline-offset-2"
+                >
                   {item.address.city} - {item.address.site}
-                </div>
+                </Link>
               </div>
 
               <div className="flex items-center gap-2 flex-shrink-0">
