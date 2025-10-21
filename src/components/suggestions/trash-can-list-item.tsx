@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/accordion";
 import Image from "next/image";
 import { useState } from "react";
+import { CopyIcon } from "lucide-react";
+import { toast } from "sonner";
 
 interface TrashCanListItemProps {
   item: TrashCanSuggestion;
@@ -37,6 +39,12 @@ export default function TrashCanListItem({
   const [selectedAction, setSelectedAction] = useState<string>("");
   const [rejectReason, setRejectReason] = useState<string>("");
 
+  const handleCopy = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    navigator.clipboard.writeText(item.spotName);
+    toast.success("클립보드에 저장하였습니다.");
+  };
+
   return (
     <Card className="hover:shadow-md transition-shadow py-2">
       <Accordion type="single" collapsible>
@@ -50,9 +58,15 @@ export default function TrashCanListItem({
                     {formatRelativeTime(item.createdAt)}
                   </span>
                 </div>
-                <div className="font-semibold truncate pb-1">
-                  {item.spotName}
-                </div>
+                <button
+                  className="group font-semibold truncate pb-1 flex gap-2 items-center"
+                  onClick={handleCopy}
+                >
+                  <span className="group-hover:underline underline-offset-2">
+                    {item.spotName}
+                  </span>
+                  <CopyIcon className="w-4 h-4" />
+                </button>
                 <div className="text-sm text-muted-foreground truncate">
                   {item.address.city} - {item.address.site}
                 </div>
