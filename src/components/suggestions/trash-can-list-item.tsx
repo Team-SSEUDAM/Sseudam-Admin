@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/accordion";
 import Image from "next/image";
 import { useState } from "react";
-import { CopyIcon } from "lucide-react";
+import { CopyIcon, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
 
@@ -68,27 +68,27 @@ export default function TrashCanListItem({
                   <div className="group-hover:underline underline-offset-2">
                     {item.spotName}
                   </div>
-
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <Link
-                    href={googleMapSearchUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-muted-foreground truncate hover:underline underline-offset-2"
-                  >
-                    {item.address.city} - {item.address.site}
-                  </Link>
-                </div>
-                <div className="mt-1 flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-shrink-0 mt-1">
                   <button
                     className="group font-semibold truncate flex gap-1 items-center"
                     onClick={handleCopy}
                   >
                     <CopyIcon className="w-4 h-4" />
                     <span className="group-hover:underline underline-offset-2">
-                      주소 복사
+                      {item.address.site}
                     </span>
                   </button>
+                </div>
+                <div className="mt-1 flex items-center gap-2">
+                  <Link
+                    href={googleMapSearchUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-sm text-muted-foreground truncate hover:underline underline-offset-2"
+                  >
+                    <MapPin className="w-4 h-4" aria-hidden="true" />
+                    <span>구글맵 바로가기</span>
+                  </Link>
                 </div>
               </div>
 
