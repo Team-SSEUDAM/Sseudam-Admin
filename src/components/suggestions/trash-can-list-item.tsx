@@ -48,7 +48,7 @@ export default function TrashCanListItem({
 
   const handleCopy = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    navigator.clipboard.writeText(item.spotName);
+    navigator.clipboard.writeText(item.address.site);
     toast.success("클립보드에 저장하였습니다.");
   };
 
@@ -65,24 +65,31 @@ export default function TrashCanListItem({
                     {formatRelativeTime(item.createdAt)}
                   </span>
                 </div>
-                <button
-                  className="group font-semibold truncate pb-1 flex gap-2 items-center"
-                  onClick={handleCopy}
-                >
-                  <span className="group-hover:underline underline-offset-2">
+                  <div className="group-hover:underline underline-offset-2">
                     {item.spotName}
-                  </span>
-                  <CopyIcon className="w-4 h-4" />
-                </button>
+                  </div>
 
-                <Link
-                  href={googleMapSearchUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-muted-foreground truncate hover:underline underline-offset-2"
-                >
-                  {item.address.city} - {item.address.site}
-                </Link>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <Link
+                    href={googleMapSearchUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-muted-foreground truncate hover:underline underline-offset-2"
+                  >
+                    {item.address.city} - {item.address.site}
+                  </Link>
+                </div>
+                <div className="mt-1 flex items-center gap-2">
+                  <button
+                    className="group font-semibold truncate flex gap-1 items-center"
+                    onClick={handleCopy}
+                  >
+                    <CopyIcon className="w-4 h-4" />
+                    <span className="group-hover:underline underline-offset-2">
+                      주소 복사
+                    </span>
+                  </button>
+                </div>
               </div>
 
               <div className="flex items-center gap-2 flex-shrink-0">
