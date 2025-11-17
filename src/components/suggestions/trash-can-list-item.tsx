@@ -95,6 +95,7 @@ export default function TrashCanListItem({
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 text-sm text-muted-foreground truncate hover:underline underline-offset-2"
+                    onClick={(event) => event.stopPropagation()}
                   >
                     <MapPin className="w-4 h-4" aria-hidden="true" />
                     <span>구글맵 바로가기</span>
