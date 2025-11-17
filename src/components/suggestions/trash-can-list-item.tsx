@@ -64,10 +64,16 @@ export default function TrashCanListItem({
                   <span className="text-xs text-muted-foreground">
                     {formatRelativeTime(item.createdAt)}
                   </span>
+
+                  <span className="text-xs text-muted-foreground truncate max-w-[120px]">
+                    {item.userName ?? "알 수 없음"}
+                  </span>
                 </div>
-                  <div className="group-hover:underline underline-offset-2">
-                    {item.spotName}
-                  </div>
+
+                <div className="group-hover:underline underline-offset-2">
+                  {item.spotName}
+                </div>
+
                 <div className="flex items-center gap-2 flex-shrink-0 mt-1">
                   <button
                     className="group font-semibold truncate flex gap-1 items-center"
@@ -79,6 +85,7 @@ export default function TrashCanListItem({
                     </span>
                   </button>
                 </div>
+
                 <div className="mt-1 flex items-center gap-2">
                   <Link
                     href={googleMapSearchUrl}
