@@ -7,6 +7,8 @@ export type SuggestionStatus = CommonStatus;
 
 export interface TrashCanSuggestion {
   id: number;
+  userId: number;
+  userName: string;
   point: {
     type: string;
     coordinates: number[];

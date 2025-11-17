@@ -46,8 +46,9 @@ export default function TrashCanListItem({
     item.point.coordinates[0]
   );
 
-  const handleCopy = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleCopy = (e: React.MouseEvent<HTMLSpanElement>) => {
     e.preventDefault();
+    e.stopPropagation();
     navigator.clipboard.writeText(item.address.site);
     toast.success("클립보드에 저장하였습니다.");
   };
@@ -64,27 +65,37 @@ export default function TrashCanListItem({
                   <span className="text-xs text-muted-foreground">
                     {formatRelativeTime(item.createdAt)}
                   </span>
+
+                  <span className="text-xs text-muted-foreground truncate max-w-[120px]">
+                    {item.userName ?? "알 수 없음"}
+                  </span>
                 </div>
-                  <div className="group-hover:underline underline-offset-2">
-                    {item.spotName}
-                  </div>
+
+                <div className="group-hover:underline underline-offset-2">
+                  {item.spotName}
+                </div>
+
                 <div className="flex items-center gap-2 flex-shrink-0 mt-1">
-                  <button
-                    className="group font-semibold truncate flex gap-1 items-center"
+                  <span
+                    role="button"
+                    tabIndex={0}
+                    className="group font-semibold truncate flex gap-1 items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                     onClick={handleCopy}
                   >
-                    <CopyIcon className="w-4 h-4" />
+                    <CopyIcon className="w-4 h-4" aria-hidden="true" />
                     <span className="group-hover:underline underline-offset-2">
                       {item.address.site}
                     </span>
-                  </button>
+                  </span>
                 </div>
+
                 <div className="mt-1 flex items-center gap-2">
                   <Link
                     href={googleMapSearchUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 text-sm text-muted-foreground truncate hover:underline underline-offset-2"
+                    onClick={(event) => event.stopPropagation()}
                   >
                     <MapPin className="w-4 h-4" aria-hidden="true" />
                     <span>구글맵 바로가기</span>
